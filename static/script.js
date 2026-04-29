@@ -6,7 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const loader = analyzeBtn.querySelector('.loader');
     const errorMessage = document.getElementById('error-message');
     const resultsPanel = document.getElementById('results-panel');
-    const analysisText = document.getElementById('analysis-text');
+    
+    // UI Elements for Data
+    const conclusionText = document.getElementById('conclusion-text');
+    const wordCount = document.getElementById('word-count');
+    const polarityScore = document.getElementById('polarity-score');
+    const emotionsList = document.getElementById('emotions-list');
+    const wordcloudBox = document.getElementById('wordcloud-box');
+    const wordcloudImg = document.getElementById('wordcloud-img');
     const transcriptText = document.getElementById('transcript-text');
 
     form.addEventListener('submit', async (e) => {
@@ -38,8 +45,43 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Display Results
-            analysisText.textContent = data.analysis;
+            conclusionText.textContent = data.conclusion;
+            wordCount.textContent = data.word_count;
+            polarityScore.textContent = data.polarity.toFixed(2);
+            
+            // Color code polarity
+            if (data.polarity > 0.1) {
+                polarityScore.style.color = 'var(--positive-color)';
+            } else if (data.polarity < -0.1) {
+                polarityScore.style.color = 'var(--negative-color)';
+            } else {
+                polarityScore.style.color = 'var(--primary-color)';
+            }
+
+            // Render Emotions
+            emotionsList.innerHTML = '';
+            if (data.top_emotions && data.top_emotions.length > 0) {
+                data.top_emotions.forEach(emotion => {
+                    const li = document.createElement('li');
+                    li.className = 'emotion-badge';
+                    li.innerHTML = `<span>${emotion.emotion}</span> <span class="emotion-score">${emotion.score}%</span>`;
+                    emotionsList.appendChild(li);
+                });
+            } else {
+                emotionsList.innerHTML = '<li>No strong emotions detected.</li>';
+            }
+
+            // Render Word Cloud
+            if (data.wordcloud_url) {
+                // Append timestamp to prevent caching old images
+                wordcloudImg.src = data.wordcloud_url + '?t=' + new Date().getTime();
+                wordcloudBox.style.display = 'block';
+            } else {
+                wordcloudBox.style.display = 'none';
+            }
+
             transcriptText.textContent = data.transcript;
+            
             resultsPanel.style.display = 'flex';
             
             // Scroll to results

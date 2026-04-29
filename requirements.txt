@@ -1,2 +1,6 @@
 flask
 youtube_transcript_api
+textblob
+NRCLex
+wordcloud
+matplotlib

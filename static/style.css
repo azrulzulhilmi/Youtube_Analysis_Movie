@@ -8,6 +8,8 @@
     --card-bg: #1e293b;
     --border-color: #334155;
     --error-color: #ef4444;
+    --positive-color: #10b981;
+    --negative-color: #f43f5e;
 }
 
 * {
@@ -135,17 +137,90 @@ button:disabled {
     padding-bottom: 0.5rem;
 }
 
-.analysis-box, .transcript-box {
+.analysis-box, .wordcloud-box, .transcript-box {
     background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 12px;
     border: 1px solid var(--border-color);
 }
 
-.analysis-box h3, .transcript-box h3 {
+.analysis-box h3, .wordcloud-box h3, .transcript-box h3 {
     font-size: 1.1rem;
     color: var(--accent-color);
     margin-bottom: 1rem;
+}
+
+.conclusion-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(139, 92, 246, 0.1);
+    border-left: 4px solid var(--accent-color);
+    border-radius: 4px;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.metric-card {
+    background: var(--bg-color);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.metric-card h4 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.emotions-section h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+
+.emotions-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+}
+
+.emotion-badge {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.emotion-score {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.wordcloud-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
 }
 
 .transcript-content {

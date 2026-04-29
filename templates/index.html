@@ -33,8 +33,31 @@
                 <h2>Analysis Results</h2>
                 
                 <div class="analysis-box">
-                    <h3>Summary</h3>
-                    <p id="analysis-text"></p>
+                    <h3>Overall Conclusion</h3>
+                    <p id="conclusion-text" class="conclusion-text"></p>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <h4>Word Count</h4>
+                            <p id="word-count" class="metric-value">0</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Polarity Score</h4>
+                            <p id="polarity-score" class="metric-value">0.0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="emotions-section">
+                        <h4>Top Emotions</h4>
+                        <ul id="emotions-list" class="emotions-list">
+                            <!-- Emotions will be populated here -->
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="wordcloud-box" id="wordcloud-box" style="display: none;">
+                    <h3>Word Cloud</h3>
+                    <img id="wordcloud-img" src="" alt="Transcript Word Cloud" class="wordcloud-img">
                 </div>
 
                 <div class="transcript-box">

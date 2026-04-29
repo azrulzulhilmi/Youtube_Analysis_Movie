@@ -2,8 +2,17 @@ from flask import Flask, request, jsonify, render_template
 from youtube_transcript_api import YouTubeTranscriptApi
 from urllib.parse import urlparse, parse_qs
 import re
+import os
+from textblob import TextBlob
+from nrclex import NRCLex
+from wordcloud import WordCloud
+import matplotlib
+matplotlib.use('Agg')  # Required for generating plots without a GUI
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
+# Ensure static folder exists for wordcloud images
+os.makedirs('static', exist_ok=True)
 
 def extract_video_id(url):
     parsed_url = urlparse(url)
@@ -21,11 +30,9 @@ def extract_video_id(url):
 
 def get_youtube_transcript(video_url):
     video_id = extract_video_id(video_url)
-    
     try:
         api = YouTubeTranscriptApi()
         transcript_list = api.list(video_id)
-        
         # Prefer manually created transcript, fallback to generated
         try:
             transcript = transcript_list.find_manually_created_transcript(['en'])
@@ -35,7 +42,6 @@ def get_youtube_transcript(video_url):
         fetched = transcript.fetch()
         text = "\n".join(snippet.text for snippet in fetched)
         return text
-        
     except Exception as e:
         return f"Error fetching transcript: {str(e)}"
 
@@ -55,12 +61,65 @@ def analyze():
     if transcript.startswith("Error fetching transcript"):
         return jsonify({'error': transcript}), 400
         
-    # Simple analysis: word count
+    # --- 1. Basic Stats ---
     word_count = len(re.findall(r'\w+', transcript))
     
+    # --- 2. Sentiment Analysis (TextBlob) ---
+    blob = TextBlob(transcript)
+    polarity = blob.sentiment.polarity
+    if polarity > 0.1:
+        sentiment_label = "Positive & Happy"
+    elif polarity < -0.1:
+        sentiment_label = "Negative & Sad"
+    else:
+        sentiment_label = "Neutral"
+
+    # --- 3. Emotion Analysis (NRCLex) ---
+    emotion_analyzer = NRCLex()
+    emotion_analyzer.load_raw_text(transcript)
+    emotions = emotion_analyzer.affect_frequencies
+    # Filter out positive/negative, keep actual emotions
+    filtered_emotions = {k: v for k, v in emotions.items() if k not in ['positive', 'negative', 'anticip'] and v > 0}
+    
+    top_emotions = []
+    if filtered_emotions:
+        # Sort by value descending
+        sorted_emotions = sorted(filtered_emotions.items(), key=lambda item: item[1], reverse=True)
+        top_emotions = [{"emotion": k.capitalize(), "score": round(v * 100, 1)} for k, v in sorted_emotions[:3]]
+
+    # --- 4. Conclusion Generation ---
+    emotion_names = [e['emotion'].lower() for e in top_emotions]
+    emotion_str = ", ".join(emotion_names) if emotion_names else "neutral feelings"
+    conclusion = f"The overall tone of the video is {sentiment_label} (Polarity Score: {polarity:.2f}). " \
+                 f"The primary emotions expressed are {emotion_str}."
+
+    # --- 5. Word Cloud Generation ---
+    # We save a unique word cloud image based on the video ID so it doesn't cache incorrectly
+    video_id = extract_video_id(url)
+    wc_filename = f"wordcloud_{video_id}.png"
+    wc_path = os.path.join('static', wc_filename)
+    
+    try:
+        wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='viridis').generate(transcript)
+        plt.figure(figsize=(8, 4))
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis('off')
+        plt.tight_layout(pad=0)
+        plt.savefig(wc_path)
+        plt.close()
+        wc_url = f"/static/{wc_filename}"
+    except Exception as e:
+        wc_url = None
+        print("Word cloud error:", e)
+
     analysis_result = {
         'transcript': transcript,
-        'analysis': f"The transcript contains approximately {word_count} words."
+        'word_count': word_count,
+        'sentiment_label': sentiment_label,
+        'polarity': polarity,
+        'top_emotions': top_emotions,
+        'conclusion': conclusion,
+        'wordcloud_url': wc_url
     }
     
     return jsonify(analysis_result)
