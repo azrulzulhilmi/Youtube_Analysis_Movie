@@ -7,6 +7,9 @@
     <meta name="description" content="A tool to extract and analyze YouTube video transcripts.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Interactive Chart Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -35,7 +38,7 @@
                 </div>
                 
                 <div class="results-grid">
-                    <!-- Left Column: Main Stats & Transcript -->
+                    <!-- Left Column: Main Stats & Quotes -->
                     <div class="results-column-left">
                         <div class="analysis-box fade-in-up">
                             <h3>Overall Conclusion</h3>
@@ -60,7 +63,23 @@
                             </div>
                         </div>
 
-                        <div class="explanations-box fade-in-up" style="animation-delay: 0.1s;">
+                        <!-- Key Quotes Box (Fills empty space on left) -->
+                        <div class="quotes-box fade-in-up" style="animation-delay: 0.1s;">
+                            <h3>💬 Key Highlight Quotes</h3>
+                            <p class="desc">The most emotionally charged sentences from the transcript.</p>
+                            
+                            <div class="quote-item positive-quote">
+                                <h4>Most Positive Moment:</h4>
+                                <blockquote id="pos-quote">"..."</blockquote>
+                            </div>
+                            
+                            <div class="quote-item negative-quote">
+                                <h4>Most Negative Moment:</h4>
+                                <blockquote id="neg-quote">"..."</blockquote>
+                            </div>
+                        </div>
+
+                        <div class="explanations-box fade-in-up" style="animation-delay: 0.2s;">
                             <h3>Metrics Explained</h3>
                             <div class="explanation-item">
                                 <h4>📈 Polarity Score</h4>
@@ -77,25 +96,27 @@
                     <div class="results-column-right">
                         
                         <!-- Word Cloud -->
-                        <div class="wordcloud-box fade-in-up" id="wordcloud-box" style="display: none; animation-delay: 0.2s;">
-                            <h3>Word Cloud</h3>
-                            <p class="desc">Visualizing the most frequently used words.</p>
-                            <div class="image-wrapper glass">
-                                <img id="wordcloud-img" src="" alt="Transcript Word Cloud" class="generated-img">
+                        <div class="wordcloud-box fade-in-up" id="wordcloud-box" style="display: none; animation-delay: 0.3s;">
+                            <h3>Interactive Word Cloud</h3>
+                            <p class="desc">Hover over words. Visualizing the most frequently used words.</p>
+                            <div class="image-wrapper glass wordcloud-container">
+                                <!-- Canvas for wordcloud2.js -->
+                                <canvas id="wordcloud-canvas" width="600" height="350"></canvas>
                             </div>
                         </div>
 
                         <!-- Syuzhet Plot -->
-                        <div class="syuzhet-box fade-in-up" id="syuzhet-box" style="display: none; animation-delay: 0.3s;">
+                        <div class="syuzhet-box fade-in-up" id="syuzhet-box" style="display: none; animation-delay: 0.4s;">
                             <h3>Sentiment Trajectory (Syuzhet-style)</h3>
-                            <p class="desc">Follows the emotional ups and downs throughout the video's narrative.</p>
-                            <div class="image-wrapper glass">
-                                <img id="syuzhet-img" src="" alt="Syuzhet Trajectory Plot" class="generated-img">
+                            <p class="desc">Hover to see specific scores. Follows emotional ups and downs.</p>
+                            <div class="image-wrapper glass chart-container">
+                                <!-- Canvas for Chart.js -->
+                                <canvas id="syuzhet-chart" width="600" height="350"></canvas>
                             </div>
                         </div>
 
                         <!-- Bing Lexicon -->
-                        <div class="lexicon-box fade-in-up" style="animation-delay: 0.4s;">
+                        <div class="lexicon-box fade-in-up" style="animation-delay: 0.5s;">
                             <h3>📖 Bing Lexicon Equivalent</h3>
                             <p class="desc">Exact count of positive vs negative words spoken in the video:</p>
                             <ul class="lexicon-counts glass">
@@ -108,7 +129,7 @@
                     </div>
                 </div>
 
-                <div class="transcript-box fade-in-up" style="animation-delay: 0.5s;">
+                <div class="transcript-box fade-in-up" style="animation-delay: 0.6s;">
                     <h3>Extracted Transcript</h3>
                     <div class="transcript-content" id="transcript-text"></div>
                 </div>
@@ -116,7 +137,7 @@
         </main>
         
         <footer>
-            <p>Built with Flask & Vanilla JS</p>
+            <p>Built with Flask & Vanilla JS | Deployable on Vercel</p>
         </footer>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>

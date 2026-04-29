@@ -12,13 +12,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const wordCount = document.getElementById('word-count');
     const polarityScore = document.getElementById('polarity-score');
     const emotionsList = document.getElementById('emotions-list');
-    const wordcloudBox = document.getElementById('wordcloud-box');
-    const wordcloudImg = document.getElementById('wordcloud-img');
     const transcriptText = document.getElementById('transcript-text');
     
     // Lexicon Counts
     const posCount = document.getElementById('pos-count');
     const negCount = document.getElementById('neg-count');
+
+    // Quotes
+    const posQuote = document.getElementById('pos-quote');
+    const negQuote = document.getElementById('neg-quote');
+
+    // Visuals
+    const wordcloudBox = document.getElementById('wordcloud-box');
+    const syuzhetBox = document.getElementById('syuzhet-box');
+    const wordcloudCanvas = document.getElementById('wordcloud-canvas');
+    const syuzhetCanvas = document.getElementById('syuzhet-chart');
+    
+    let chartInstance = null; // To keep track and destroy previous chart instances
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -56,6 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Populate Lexicon counts
             posCount.textContent = data.positive_words || 0;
             negCount.textContent = data.negative_words || 0;
+
+            // Populate Quotes
+            posQuote.textContent = `"${data.top_pos_quote || 'N/A'}"`;
+            negQuote.textContent = `"${data.top_neg_quote || 'N/A'}"`;
             
             // Color code polarity
             if (data.polarity > 0.1) {
@@ -79,21 +93,96 @@ document.addEventListener('DOMContentLoaded', () => {
                 emotionsList.innerHTML = '<li>No strong emotions detected.</li>';
             }
 
-            // Render Word Cloud
-            if (data.wordcloud_url) {
-                // Append timestamp to prevent caching old images
-                wordcloudImg.src = data.wordcloud_url + '?t=' + new Date().getTime();
+            // Render Interactive Word Cloud
+            if (data.wordcloud_data && data.wordcloud_data.length > 0) {
                 wordcloudBox.style.display = 'block';
+                // Adjust sizes for wordcloud2 (scale based on max freq)
+                const maxFreq = data.wordcloud_data[0][1];
+                const weightFactor = 100 / maxFreq; 
+                
+                WordCloud(wordcloudCanvas, { 
+                    list: data.wordcloud_data,
+                    weightFactor: weightFactor,
+                    fontFamily: 'Inter, sans-serif',
+                    color: 'random-light',
+                    backgroundColor: 'transparent',
+                    rotateRatio: 0.5,
+                    rotationSteps: 2,
+                    gridSize: 8,
+                    shape: 'circle'
+                });
             } else {
                 wordcloudBox.style.display = 'none';
             }
 
-            // Render Syuzhet Plot
-            const syuzhetBox = document.getElementById('syuzhet-box');
-            const syuzhetImg = document.getElementById('syuzhet-img');
-            if (data.syuzhet_url) {
-                syuzhetImg.src = data.syuzhet_url + '?t=' + new Date().getTime();
+            // Render Interactive Chart.js Plot
+            if (data.syuzhet_data && data.syuzhet_data.length > 0) {
                 syuzhetBox.style.display = 'block';
+                
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                const labels = data.syuzhet_data.map((_, index) => `Chunk ${index + 1}`);
+
+                chartInstance = new Chart(syuzhetCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Sentiment Polarity',
+                            data: data.syuzhet_data,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            pointBackgroundColor: '#8b5cf6',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#8b5cf6',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4 // smooth curve
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#94a3b8'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    maxTicksLimit: 10
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: '#334155',
+                                borderWidth: 1
+                            }
+                        }
+                    }
+                });
             } else {
                 syuzhetBox.style.display = 'none';
             }

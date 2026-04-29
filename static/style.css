@@ -150,7 +150,7 @@ button:disabled {
     align-items: start;
 }
 
-.results-column-right {
+.results-column-left, .results-column-right {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -165,7 +165,7 @@ button:disabled {
 }
 
 /* Box Components */
-.analysis-box, .explanations-box, .wordcloud-box, .syuzhet-box, .lexicon-box, .transcript-box {
+.analysis-box, .explanations-box, .wordcloud-box, .syuzhet-box, .lexicon-box, .transcript-box, .quotes-box {
     background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 12px;
@@ -173,11 +173,7 @@ button:disabled {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.explanations-box {
-    margin-top: 1.5rem;
-}
-
-.analysis-box h3, .explanations-box h3, .wordcloud-box h3, .syuzhet-box h3, .lexicon-box h3, .transcript-box h3 {
+.analysis-box h3, .explanations-box h3, .wordcloud-box h3, .syuzhet-box h3, .lexicon-box h3, .transcript-box h3, .quotes-box h3 {
     font-size: 1.1rem;
     color: var(--accent-color);
     margin-bottom: 0.5rem;
@@ -253,6 +249,37 @@ button:disabled {
     color: var(--primary-color);
 }
 
+/* Quotes Section */
+.quote-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background: var(--bg-color);
+    border-left: 4px solid var(--border-color);
+}
+
+.positive-quote {
+    border-left-color: var(--positive-color);
+}
+
+.negative-quote {
+    border-left-color: var(--negative-color);
+}
+
+.quote-item h4 {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.quote-item blockquote {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
 /* Explanations Section */
 .explanation-item {
     margin-bottom: 1.5rem;
@@ -320,17 +347,26 @@ button:disabled {
     margin-top: 0.5rem;
 }
 
-/* Image Wrappers */
+/* Image/Canvas Wrappers */
 .image-wrapper {
     padding: 0.5rem;
     border-radius: 8px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
-.generated-img {
+.wordcloud-container, .chart-container {
+    height: 350px;
+    position: relative;
     width: 100%;
-    height: auto;
-    border-radius: 4px;
-    display: block;
+}
+
+canvas {
+    max-width: 100%;
+    height: auto !important;
 }
 
 .transcript-content {
