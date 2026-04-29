@@ -35,18 +35,18 @@
                 </div>
                 
                 <div class="results-grid">
-                    <!-- Left Column: Stats & Text -->
+                    <!-- Left Column: Main Stats & Transcript -->
                     <div class="results-column-left">
-                        <div class="analysis-box">
+                        <div class="analysis-box fade-in-up">
                             <h3>Overall Conclusion</h3>
                             <p id="conclusion-text" class="conclusion-text"></p>
                             
                             <div class="metrics-grid">
-                                <div class="metric-card">
+                                <div class="metric-card glass">
                                     <h4>Word Count</h4>
                                     <p id="word-count" class="metric-value">0</p>
                                 </div>
-                                <div class="metric-card">
+                                <div class="metric-card glass">
                                     <h4>Polarity Score</h4>
                                     <p id="polarity-score" class="metric-value">0.0</p>
                                 </div>
@@ -60,42 +60,55 @@
                             </div>
                         </div>
 
-                        <div class="explanations-box">
+                        <div class="explanations-box fade-in-up" style="animation-delay: 0.1s;">
                             <h3>Metrics Explained</h3>
-                            
                             <div class="explanation-item">
                                 <h4>📈 Polarity Score</h4>
                                 <p>This score ranges from <strong>-1.0 to +1.0</strong>. A higher value (closer to 1) means the transcript uses highly positive and happy language. A lower value (closer to -1) indicates sad, negative, or angry language. A score around 0 indicates a neutral tone.</p>
                             </div>
-
                             <div class="explanation-item">
-                                <h4>📖 Bing Lexicon (Positive vs Negative)</h4>
-                                <p>We count exactly how many positive and negative words were spoken in the video:</p>
-                                <ul class="lexicon-counts">
-                                    <li><span class="dot positive-dot"></span> Positive words: <strong id="pos-count">0</strong></li>
-                                    <li><span class="dot negative-dot"></span> Negative words: <strong id="neg-count">0</strong></li>
-                                </ul>
-                                <p class="lexicon-context">This shows if the audience or speaker leans towards a good or bad mood overall.</p>
-                            </div>
-
-                            <div class="explanation-item">
-                                <h4>🔄 Sentiment Context (Syuzhet-style)</h4>
-                                <p>Similar to the Syuzhet dictionary used in R, the Polarity and Emotion breakdown give us the trajectory of the speaker's emotional state. If negative words are high alongside "Sadness" or "Anger", it usually reflects drama-like emotional lows.</p>
+                                <h4>🔄 Sentiment Context</h4>
+                                <p>By looking at the Polarity and Emotion breakdown together, we can understand the overall mood. If negative words are high alongside "Sadness" or "Anger", it usually reflects drama-like emotional lows.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Column: Word Cloud -->
+                    <!-- Right Column: Visuals & Deep Dives -->
                     <div class="results-column-right">
-                        <div class="wordcloud-box" id="wordcloud-box" style="display: none;">
+                        
+                        <!-- Word Cloud -->
+                        <div class="wordcloud-box fade-in-up" id="wordcloud-box" style="display: none; animation-delay: 0.2s;">
                             <h3>Word Cloud</h3>
-                            <p class="wordcloud-desc">Visualizing the most frequently used words in the video.</p>
-                            <img id="wordcloud-img" src="" alt="Transcript Word Cloud" class="wordcloud-img">
+                            <p class="desc">Visualizing the most frequently used words.</p>
+                            <div class="image-wrapper glass">
+                                <img id="wordcloud-img" src="" alt="Transcript Word Cloud" class="generated-img">
+                            </div>
                         </div>
+
+                        <!-- Syuzhet Plot -->
+                        <div class="syuzhet-box fade-in-up" id="syuzhet-box" style="display: none; animation-delay: 0.3s;">
+                            <h3>Sentiment Trajectory (Syuzhet-style)</h3>
+                            <p class="desc">Follows the emotional ups and downs throughout the video's narrative.</p>
+                            <div class="image-wrapper glass">
+                                <img id="syuzhet-img" src="" alt="Syuzhet Trajectory Plot" class="generated-img">
+                            </div>
+                        </div>
+
+                        <!-- Bing Lexicon -->
+                        <div class="lexicon-box fade-in-up" style="animation-delay: 0.4s;">
+                            <h3>📖 Bing Lexicon Equivalent</h3>
+                            <p class="desc">Exact count of positive vs negative words spoken in the video:</p>
+                            <ul class="lexicon-counts glass">
+                                <li><span class="dot positive-dot"></span> Positive words: <strong id="pos-count">0</strong></li>
+                                <li><span class="dot negative-dot"></span> Negative words: <strong id="neg-count">0</strong></li>
+                            </ul>
+                            <p class="lexicon-context desc">This shows if the speaker leans towards a good or bad mood overall.</p>
+                        </div>
+                        
                     </div>
                 </div>
 
-                <div class="transcript-box">
+                <div class="transcript-box fade-in-up" style="animation-delay: 0.5s;">
                     <h3>Extracted Transcript</h3>
                     <div class="transcript-content" id="transcript-text"></div>
                 </div>

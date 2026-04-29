@@ -88,6 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 wordcloudBox.style.display = 'none';
             }
 
+            // Render Syuzhet Plot
+            const syuzhetBox = document.getElementById('syuzhet-box');
+            const syuzhetImg = document.getElementById('syuzhet-img');
+            if (data.syuzhet_url) {
+                syuzhetImg.src = data.syuzhet_url + '?t=' + new Date().getTime();
+                syuzhetBox.style.display = 'block';
+            } else {
+                syuzhetBox.style.display = 'none';
+            }
+
             transcriptText.textContent = data.transcript;
             
             resultsPanel.style.display = 'flex';

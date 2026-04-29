@@ -9,6 +9,7 @@ from wordcloud import WordCloud
 import matplotlib
 matplotlib.use('Agg')  # Required for generating plots without a GUI
 import matplotlib.pyplot as plt
+import numpy as np
 
 app = Flask(__name__)
 # Ensure static folder exists for wordcloud images
@@ -100,23 +101,65 @@ def analyze():
     conclusion = f"The overall tone of the video is {sentiment_label} (Polarity Score: {polarity:.2f}). " \
                  f"The primary emotions expressed are {emotion_str}."
 
-    # --- 5. Word Cloud Generation ---
     video_id = extract_video_id(url)
+
+    # --- 5. Word Cloud Generation ---
     wc_filename = f"wordcloud_{video_id}.png"
     wc_path = os.path.join('static', wc_filename)
-    
     try:
-        wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='viridis').generate(transcript)
-        plt.figure(figsize=(8, 4))
+        wordcloud = WordCloud(width=800, height=400, background_color='#1e293b', colormap='viridis').generate(transcript)
+        plt.figure(figsize=(8, 4), facecolor='#1e293b')
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
         plt.tight_layout(pad=0)
-        plt.savefig(wc_path)
+        plt.savefig(wc_path, facecolor='#1e293b')
         plt.close()
         wc_url = f"/static/{wc_filename}"
     except Exception as e:
         wc_url = None
         print("Word cloud error:", e)
+
+    # --- 6. Syuzhet-style Sentiment Trajectory Plot ---
+    sz_filename = f"syuzhet_{video_id}.png"
+    sz_path = os.path.join('static', sz_filename)
+    try:
+        # Split text into chunks to simulate narrative time
+        # E.g., split into 20 chunks
+        words = transcript.split()
+        num_chunks = 20
+        chunk_size = max(1, len(words) // num_chunks)
+        chunks = [" ".join(words[i:i + chunk_size]) for i in range(0, len(words), chunk_size)]
+        
+        scores = [TextBlob(chunk).sentiment.polarity for chunk in chunks]
+        
+        # Smooth the line slightly for better visuals (rolling average)
+        if len(scores) > 3:
+            window_size = 3
+            scores = np.convolve(scores, np.ones(window_size)/window_size, mode='valid')
+
+        plt.figure(figsize=(8, 4), facecolor='#1e293b')
+        ax = plt.axes()
+        ax.set_facecolor('#1e293b')
+        
+        plt.plot(scores, color='#3b82f6', linewidth=2.5, marker='o', markersize=4, markerfacecolor='#8b5cf6')
+        plt.axhline(y=0, color='#ef4444', linestyle='--', linewidth=1.5)
+        
+        plt.title('Sentiment Trajectory (Syuzhet-style)', color='#f8fafc', fontsize=14, pad=15)
+        plt.xlabel('Narrative Time (Chunks)', color='#94a3b8', fontsize=10)
+        plt.ylabel('Sentiment Polarity', color='#94a3b8', fontsize=10)
+        
+        plt.tick_params(colors='#94a3b8')
+        for spine in ax.spines.values():
+            spine.set_color('#334155')
+
+        plt.tight_layout()
+        plt.savefig(sz_path, facecolor='#1e293b')
+        plt.close()
+        sz_url = f"/static/{sz_filename}"
+    except Exception as e:
+        sz_url = None
+        print("Syuzhet plot error:", e)
+
 
     analysis_result = {
         'transcript': transcript,
@@ -127,7 +170,8 @@ def analyze():
         'positive_words': positive_words,
         'negative_words': negative_words,
         'conclusion': conclusion,
-        'wordcloud_url': wc_url
+        'wordcloud_url': wc_url,
+        'syuzhet_url': sz_url
     }
     
     return jsonify(analysis_result)

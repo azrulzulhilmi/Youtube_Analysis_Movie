@@ -30,7 +30,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 1100px; /* Increased max width for side-by-side */
+    max-width: 1200px;
     padding: 3rem 1.5rem;
     display: flex;
     flex-direction: column;
@@ -108,12 +108,15 @@ button {
 button:hover {
     background-color: var(--primary-hover);
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 button:disabled {
-    background-color: var(--text-muted);
+    background-color: var(--border-color);
+    color: var(--text-muted);
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
 }
 
 .error-message {
@@ -130,7 +133,6 @@ button:disabled {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    animation: fadeIn 0.5s ease;
 }
 
 .results-header h2 {
@@ -144,24 +146,46 @@ button:disabled {
 .results-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    gap: 2rem;
     align-items: start;
 }
 
-.analysis-box, .explanations-box, .wordcloud-box, .transcript-box {
+.results-column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Glass effect utilities */
+.glass {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Box Components */
+.analysis-box, .explanations-box, .wordcloud-box, .syuzhet-box, .lexicon-box, .transcript-box {
     background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 12px;
     border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .explanations-box {
     margin-top: 1.5rem;
 }
 
-.analysis-box h3, .explanations-box h3, .wordcloud-box h3, .transcript-box h3 {
+.analysis-box h3, .explanations-box h3, .wordcloud-box h3, .syuzhet-box h3, .lexicon-box h3, .transcript-box h3 {
     font-size: 1.1rem;
     color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+.desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
     margin-bottom: 1rem;
 }
 
@@ -183,10 +207,8 @@ button:disabled {
 }
 
 .metric-card {
-    background: var(--bg-color);
-    padding: 1rem;
+    padding: 1.25rem 1rem;
     border-radius: 8px;
-    border: 1px solid var(--border-color);
     text-align: center;
 }
 
@@ -197,7 +219,7 @@ button:disabled {
 }
 
 .metric-value {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--primary-color);
 }
@@ -231,7 +253,7 @@ button:disabled {
     color: var(--primary-color);
 }
 
-/* Explanations Section Styles */
+/* Explanations Section */
 .explanation-item {
     margin-bottom: 1.5rem;
 }
@@ -252,21 +274,20 @@ button:disabled {
 .explanation-item p {
     font-size: 0.9rem;
     color: var(--text-muted);
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
+/* Lexicon Box */
 .lexicon-counts {
     list-style: none;
     margin: 0.75rem 0;
-    padding: 0.75rem;
-    background: var(--bg-color);
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: 8px;
 }
 
 .lexicon-counts li {
-    font-size: 0.95rem;
-    margin-bottom: 0.25rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -285,34 +306,36 @@ button:disabled {
 
 .positive-dot {
     background-color: var(--positive-color);
+    box-shadow: 0 0 8px var(--positive-color);
 }
 
 .negative-dot {
     background-color: var(--negative-color);
+    box-shadow: 0 0 8px var(--negative-color);
 }
 
 .lexicon-context {
     font-style: italic;
     font-size: 0.85rem !important;
+    margin-top: 0.5rem;
 }
 
-/* Word Cloud Styles */
-.wordcloud-desc {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
+/* Image Wrappers */
+.image-wrapper {
+    padding: 0.5rem;
+    border-radius: 8px;
 }
 
-.wordcloud-img {
+.generated-img {
     width: 100%;
     height: auto;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    display: block;
 }
 
 .transcript-content {
     background: var(--bg-color);
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: 8px;
     border: 1px solid var(--border-color);
     max-height: 400px;
@@ -344,7 +367,20 @@ footer {
     font-size: 0.85rem;
 }
 
-/* Loader */
+/* Animations */
+.fade-in-up {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .loader {
     width: 20px;
     height: 20px;
@@ -358,13 +394,8 @@ footer {
     to { transform: rotate(360deg); }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 /* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 960px) {
     .results-grid {
         grid-template-columns: 1fr;
     }
