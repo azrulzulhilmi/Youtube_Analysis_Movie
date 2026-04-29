@@ -99,9 +99,11 @@
                         <div class="wordcloud-box fade-in-up" id="wordcloud-box" style="display: none; animation-delay: 0.3s;">
                             <h3>Interactive Word Cloud</h3>
                             <p class="desc">Hover over words. Visualizing the most frequently used words.</p>
-                            <div class="image-wrapper glass wordcloud-container">
+                            <div class="image-wrapper glass wordcloud-container" style="position: relative;">
                                 <!-- Canvas for wordcloud2.js -->
                                 <canvas id="wordcloud-canvas" width="600" height="350"></canvas>
+                                <!-- Tooltip for Word Cloud Hover -->
+                                <div id="wc-tooltip" style="display: none; position: absolute; background: rgba(15, 23, 42, 0.95); padding: 10px 20px; border-radius: 8px; border: 1px solid var(--primary-color); pointer-events: none; z-index: 100; color: white; box-shadow: 0 8px 24px rgba(0,0,0,0.5); transform: translate(-50%, -100%); margin-top: -15px; text-align: center; backdrop-filter: blur(4px);"></div>
                             </div>
                         </div>
 

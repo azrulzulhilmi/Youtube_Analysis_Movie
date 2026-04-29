@@ -100,16 +100,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 const maxFreq = data.wordcloud_data[0][1];
                 const weightFactor = 100 / maxFreq; 
                 
+                const tooltip = document.getElementById('wc-tooltip');
+                
                 WordCloud(wordcloudCanvas, { 
                     list: data.wordcloud_data,
                     weightFactor: weightFactor,
                     fontFamily: 'Inter, sans-serif',
                     color: 'random-light',
                     backgroundColor: 'transparent',
-                    rotateRatio: 0.5,
+                    rotateRatio: 0.1, // Less rotation to fill space neatly
                     rotationSteps: 2,
                     gridSize: 8,
-                    shape: 'circle'
+                    shape: 'square', // Make it full, not circle
+                    hover: function(item, dimension, event) {
+                        if (!item) {
+                            tooltip.style.display = 'none';
+                            wordcloudCanvas.style.cursor = 'default';
+                            return;
+                        }
+                        wordcloudCanvas.style.cursor = 'pointer';
+                        tooltip.style.display = 'block';
+                        // Display the word large
+                        tooltip.innerHTML = `<div style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; line-height: 1;">${item[0]}</div><div style="font-size: 0.95rem; color: var(--text-muted); margin-top: 5px;">Frequency: ${item[1]}</div>`;
+                        
+                        // Position exactly at cursor
+                        tooltip.style.left = event.offsetX + 'px';
+                        tooltip.style.top = event.offsetY + 'px';
+                    }
                 });
             } else {
                 wordcloudBox.style.display = 'none';
