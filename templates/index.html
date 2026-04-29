@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Review Analyzer</title>
+    <meta name="description" content="A tool to extract and analyze YouTube video transcripts.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>YouTube Review Analyzer</h1>
+            <p>Paste a YouTube link below to automatically extract and analyze the video transcript.</p>
+        </header>
+        
+        <main>
+            <section class="input-section">
+                <form id="analyze-form">
+                    <div class="input-group">
+                        <input type="url" id="youtube-url" name="url" placeholder="https://www.youtube.com/watch?v=..." required>
+                        <button type="submit" id="analyze-btn">
+                            <span class="btn-text">Analyze</span>
+                            <span class="loader" style="display: none;"></span>
+                        </button>
+                    </div>
+                </form>
+                <div id="error-message" class="error-message" style="display: none;"></div>
+            </section>
+            
+            <section id="results-panel" class="results-section" style="display: none;">
+                <h2>Analysis Results</h2>
+                
+                <div class="analysis-box">
+                    <h3>Summary</h3>
+                    <p id="analysis-text"></p>
+                </div>
+
+                <div class="transcript-box">
+                    <h3>Extracted Transcript</h3>
+                    <div class="transcript-content" id="transcript-text"></div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>Built with Flask & Vanilla JS</p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
