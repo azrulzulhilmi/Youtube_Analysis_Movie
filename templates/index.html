@@ -30,34 +30,69 @@
             </section>
             
             <section id="results-panel" class="results-section" style="display: none;">
-                <h2>Analysis Results</h2>
-                
-                <div class="analysis-box">
-                    <h3>Overall Conclusion</h3>
-                    <p id="conclusion-text" class="conclusion-text"></p>
-                    
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <h4>Word Count</h4>
-                            <p id="word-count" class="metric-value">0</p>
-                        </div>
-                        <div class="metric-card">
-                            <h4>Polarity Score</h4>
-                            <p id="polarity-score" class="metric-value">0.0</p>
-                        </div>
-                    </div>
-                    
-                    <div class="emotions-section">
-                        <h4>Top Emotions</h4>
-                        <ul id="emotions-list" class="emotions-list">
-                            <!-- Emotions will be populated here -->
-                        </ul>
-                    </div>
+                <div class="results-header">
+                    <h2>Analysis Results</h2>
                 </div>
+                
+                <div class="results-grid">
+                    <!-- Left Column: Stats & Text -->
+                    <div class="results-column-left">
+                        <div class="analysis-box">
+                            <h3>Overall Conclusion</h3>
+                            <p id="conclusion-text" class="conclusion-text"></p>
+                            
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <h4>Word Count</h4>
+                                    <p id="word-count" class="metric-value">0</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Polarity Score</h4>
+                                    <p id="polarity-score" class="metric-value">0.0</p>
+                                </div>
+                            </div>
+                            
+                            <div class="emotions-section">
+                                <h4>Top Emotions</h4>
+                                <ul id="emotions-list" class="emotions-list">
+                                    <!-- Emotions will be populated here -->
+                                </ul>
+                            </div>
+                        </div>
 
-                <div class="wordcloud-box" id="wordcloud-box" style="display: none;">
-                    <h3>Word Cloud</h3>
-                    <img id="wordcloud-img" src="" alt="Transcript Word Cloud" class="wordcloud-img">
+                        <div class="explanations-box">
+                            <h3>Metrics Explained</h3>
+                            
+                            <div class="explanation-item">
+                                <h4>📈 Polarity Score</h4>
+                                <p>This score ranges from <strong>-1.0 to +1.0</strong>. A higher value (closer to 1) means the transcript uses highly positive and happy language. A lower value (closer to -1) indicates sad, negative, or angry language. A score around 0 indicates a neutral tone.</p>
+                            </div>
+
+                            <div class="explanation-item">
+                                <h4>📖 Bing Lexicon (Positive vs Negative)</h4>
+                                <p>We count exactly how many positive and negative words were spoken in the video:</p>
+                                <ul class="lexicon-counts">
+                                    <li><span class="dot positive-dot"></span> Positive words: <strong id="pos-count">0</strong></li>
+                                    <li><span class="dot negative-dot"></span> Negative words: <strong id="neg-count">0</strong></li>
+                                </ul>
+                                <p class="lexicon-context">This shows if the audience or speaker leans towards a good or bad mood overall.</p>
+                            </div>
+
+                            <div class="explanation-item">
+                                <h4>🔄 Sentiment Context (Syuzhet-style)</h4>
+                                <p>Similar to the Syuzhet dictionary used in R, the Polarity and Emotion breakdown give us the trajectory of the speaker's emotional state. If negative words are high alongside "Sadness" or "Anger", it usually reflects drama-like emotional lows.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Word Cloud -->
+                    <div class="results-column-right">
+                        <div class="wordcloud-box" id="wordcloud-box" style="display: none;">
+                            <h3>Word Cloud</h3>
+                            <p class="wordcloud-desc">Visualizing the most frequently used words in the video.</p>
+                            <img id="wordcloud-img" src="" alt="Transcript Word Cloud" class="wordcloud-img">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="transcript-box">

@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const wordcloudBox = document.getElementById('wordcloud-box');
     const wordcloudImg = document.getElementById('wordcloud-img');
     const transcriptText = document.getElementById('transcript-text');
+    
+    // Lexicon Counts
+    const posCount = document.getElementById('pos-count');
+    const negCount = document.getElementById('neg-count');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -48,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
             conclusionText.textContent = data.conclusion;
             wordCount.textContent = data.word_count;
             polarityScore.textContent = data.polarity.toFixed(2);
+            
+            // Populate Lexicon counts
+            posCount.textContent = data.positive_words || 0;
+            negCount.textContent = data.negative_words || 0;
             
             // Color code polarity
             if (data.polarity > 0.1) {

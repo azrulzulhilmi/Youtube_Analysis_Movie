@@ -77,7 +77,14 @@ def analyze():
     # --- 3. Emotion Analysis (NRCLex) ---
     emotion_analyzer = NRCLex()
     emotion_analyzer.load_raw_text(transcript)
+    
     emotions = emotion_analyzer.affect_frequencies
+    raw_scores = emotion_analyzer.raw_emotion_scores
+    
+    # Extract Bing-like counts
+    positive_words = raw_scores.get('positive', 0)
+    negative_words = raw_scores.get('negative', 0)
+
     # Filter out positive/negative, keep actual emotions
     filtered_emotions = {k: v for k, v in emotions.items() if k not in ['positive', 'negative', 'anticip'] and v > 0}
     
@@ -94,7 +101,6 @@ def analyze():
                  f"The primary emotions expressed are {emotion_str}."
 
     # --- 5. Word Cloud Generation ---
-    # We save a unique word cloud image based on the video ID so it doesn't cache incorrectly
     video_id = extract_video_id(url)
     wc_filename = f"wordcloud_{video_id}.png"
     wc_path = os.path.join('static', wc_filename)
@@ -118,6 +124,8 @@ def analyze():
         'sentiment_label': sentiment_label,
         'polarity': polarity,
         'top_emotions': top_emotions,
+        'positive_words': positive_words,
+        'negative_words': negative_words,
         'conclusion': conclusion,
         'wordcloud_url': wc_url
     }

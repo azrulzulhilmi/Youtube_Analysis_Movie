@@ -30,7 +30,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1100px; /* Increased max width for side-by-side */
     padding: 3rem 1.5rem;
     display: flex;
     flex-direction: column;
@@ -61,6 +61,9 @@ header p {
     border-radius: 16px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     border: 1px solid var(--border-color);
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .input-group {
@@ -130,21 +133,33 @@ button:disabled {
     animation: fadeIn 0.5s ease;
 }
 
-.results-section h2 {
+.results-header h2 {
     font-size: 1.5rem;
     font-weight: 600;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
-.analysis-box, .wordcloud-box, .transcript-box {
+.results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.analysis-box, .explanations-box, .wordcloud-box, .transcript-box {
     background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 12px;
     border: 1px solid var(--border-color);
 }
 
-.analysis-box h3, .wordcloud-box h3, .transcript-box h3 {
+.explanations-box {
+    margin-top: 1.5rem;
+}
+
+.analysis-box h3, .explanations-box h3, .wordcloud-box h3, .transcript-box h3 {
     font-size: 1.1rem;
     color: var(--accent-color);
     margin-bottom: 1rem;
@@ -216,6 +231,78 @@ button:disabled {
     color: var(--primary-color);
 }
 
+/* Explanations Section Styles */
+.explanation-item {
+    margin-bottom: 1.5rem;
+}
+
+.explanation-item:last-child {
+    margin-bottom: 0;
+}
+
+.explanation-item h4 {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.explanation-item p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.lexicon-counts {
+    list-style: none;
+    margin: 0.75rem 0;
+    padding: 0.75rem;
+    background: var(--bg-color);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.lexicon-counts li {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lexicon-counts li:last-child {
+    margin-bottom: 0;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.positive-dot {
+    background-color: var(--positive-color);
+}
+
+.negative-dot {
+    background-color: var(--negative-color);
+}
+
+.lexicon-context {
+    font-style: italic;
+    font-size: 0.85rem !important;
+}
+
+/* Word Cloud Styles */
+.wordcloud-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
 .wordcloud-img {
     width: 100%;
     height: auto;
@@ -277,6 +364,12 @@ footer {
 }
 
 /* Responsive */
+@media (max-width: 900px) {
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 600px) {
     .input-group {
         flex-direction: column;
