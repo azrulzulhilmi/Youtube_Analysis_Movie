@@ -1,14 +1,20 @@
 :root {
-    --bg-color: #0f172a;
-    --text-color: #f8fafc;
-    --text-muted: #94a3b8;
-    --primary-color: #3b82f6;
-    --primary-hover: #2563eb;
-    --accent-color: #8b5cf6;
-    --card-bg: #1e293b;
-    --border-color: #334155;
+    /* New Theme from RealtimeColors */
+    --bg-color: #0d180d;
+    --text-color: #e8f3e7;
+    --primary-color: #a1cea2;
+    --secondary-color: #376954;
+    --accent-color: #61aca1;
+    
+    /* Derived Colors for UI Elements */
+    --card-bg: #112111;
+    --border-color: #23422d;
+    --text-muted: #8ba88c;
+    --primary-hover: #8db58e;
+    
+    /* Semantic Colors */
     --error-color: #ef4444;
-    --positive-color: #10b981;
+    --positive-color: #a1cea2; /* Using primary for positive */
     --negative-color: #f43f5e;
 }
 
@@ -59,7 +65,7 @@ header p {
     background: var(--card-bg);
     padding: 2rem;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     border: 1px solid var(--border-color);
     max-width: 800px;
     margin: 0 auto;
@@ -86,7 +92,7 @@ input[type="url"] {
 input[type="url"]:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 0 3px rgba(161, 206, 162, 0.2);
 }
 
 button {
@@ -96,7 +102,7 @@ button {
     border: none;
     border-radius: 8px;
     background-color: var(--primary-color);
-    color: white;
+    color: var(--bg-color); /* Dark text on light button */
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -108,7 +114,7 @@ button {
 button:hover {
     background-color: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 12px rgba(161, 206, 162, 0.3);
 }
 
 button:disabled {
@@ -156,12 +162,30 @@ button:disabled {
     gap: 1.5rem;
 }
 
+/* Make left column stretch vertically */
+.results-column-left {
+    height: 100%;
+}
+
+/* Make transcript box grow to fill remaining space */
+.transcript-box {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.transcript-content {
+    flex-grow: 1;
+    max-height: none; /* Let it expand */
+    height: 350px; /* Base height */
+}
+
 /* Glass effect utilities */
 .glass {
-    background: rgba(15, 23, 42, 0.4);
+    background: rgba(13, 24, 13, 0.4);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(161, 206, 162, 0.1);
 }
 
 /* Box Components */
@@ -170,7 +194,7 @@ button:disabled {
     padding: 1.5rem;
     border-radius: 12px;
     border: 1px solid var(--border-color);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .analysis-box h3, .explanations-box h3, .wordcloud-box h3, .syuzhet-box h3, .lexicon-box h3, .transcript-box h3, .quotes-box h3 {
@@ -190,7 +214,7 @@ button:disabled {
     font-weight: 500;
     margin-bottom: 1.5rem;
     padding: 1rem;
-    background: rgba(139, 92, 246, 0.1);
+    background: rgba(97, 172, 161, 0.1);
     border-left: 4px solid var(--accent-color);
     border-radius: 4px;
 }
@@ -374,7 +398,6 @@ canvas {
     padding: 1.5rem;
     border-radius: 8px;
     border: 1px solid var(--border-color);
-    max-height: 400px;
     overflow-y: auto;
     font-size: 0.95rem;
     white-space: pre-wrap;
@@ -391,7 +414,7 @@ canvas {
 }
 
 .transcript-content::-webkit-scrollbar-thumb {
-    background-color: var(--border-color);
+    background-color: var(--secondary-color);
     border-radius: 4px;
 }
 
@@ -420,9 +443,9 @@ footer {
 .loader {
     width: 20px;
     height: 20px;
-    border: 3px solid rgba(255,255,255,0.3);
+    border: 3px solid rgba(13,24,13,0.3);
     border-radius: 50%;
-    border-top-color: white;
+    border-top-color: var(--bg-color);
     animation: spin 1s ease-in-out infinite;
 }
 

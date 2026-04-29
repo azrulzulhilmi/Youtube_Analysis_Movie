@@ -149,12 +149,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         datasets: [{
                             label: 'Sentiment Polarity',
                             data: data.syuzhet_data,
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                            pointBackgroundColor: '#8b5cf6',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: '#8b5cf6',
+                            borderColor: '#a1cea2',
+                            backgroundColor: 'rgba(161, 206, 162, 0.2)',
+                            pointBackgroundColor: '#61aca1',
+                            pointBorderColor: '#0d180d',
+                            pointHoverBackgroundColor: '#0d180d',
+                            pointHoverBorderColor: '#61aca1',
                             borderWidth: 2,
                             fill: true,
                             tension: 0.4 // smooth curve
@@ -170,10 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         scales: {
                             y: {
                                 grid: {
-                                    color: 'rgba(255, 255, 255, 0.1)'
+                                    color: 'rgba(232, 243, 231, 0.05)'
                                 },
                                 ticks: {
-                                    color: '#94a3b8'
+                                    color: '#8ba88c'
                                 }
                             },
                             x: {
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     display: false
                                 },
                                 ticks: {
-                                    color: '#94a3b8',
+                                    color: '#8ba88c',
                                     maxTicksLimit: 10
                                 }
                             }
@@ -191,10 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 display: false
                             },
                             tooltip: {
-                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                                titleColor: '#fff',
-                                bodyColor: '#fff',
-                                borderColor: '#334155',
+                                backgroundColor: 'rgba(17, 33, 17, 0.95)',
+                                titleColor: '#e8f3e7',
+                                bodyColor: '#e8f3e7',
+                                borderColor: '#23422d',
                                 borderWidth: 1
                             }
                         }
