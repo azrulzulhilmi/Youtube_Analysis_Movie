@@ -43,9 +43,16 @@ def extract_video_id(url):
 
 def get_youtube_transcript(video_url):
     video_id = extract_video_id(video_url)
+    
+    proxy_url = os.environ.get('YOUTUBE_PROXY')
+    proxies = {"http": proxy_url, "https": proxy_url} if proxy_url else None
+    
     try:
-        api = YouTubeTranscriptApi()
-        transcript_list = api.list(video_id)
+        if proxies:
+            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id, proxies=proxies)
+        else:
+            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+            
         try:
             transcript = transcript_list.find_manually_created_transcript(['en'])
         except:
@@ -55,7 +62,10 @@ def get_youtube_transcript(video_url):
         text = "\n".join(snippet.text for snippet in fetched)
         return text
     except Exception as e:
-        return f"Error fetching transcript: {str(e)}"
+        error_msg = str(e)
+        if "YouTube is blocking requests from your IP" in error_msg or "cloud provider" in error_msg:
+            return "Error: YouTube has blocked Vercel's servers from accessing transcripts. Because Vercel uses AWS datacenters, YouTube detects it as a bot. To fix this on Vercel, you must add a 'YOUTUBE_PROXY' environment variable with a working proxy URL, or host this application on a standard VPS instead of a serverless cloud provider."
+        return f"Error fetching transcript: {error_msg}"
 
 @app.route('/')
 def index():
