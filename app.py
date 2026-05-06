@@ -46,6 +46,7 @@ def get_youtube_transcript(video_url):
     ydl_opts = {
         'skip_download': True,
         'quiet': True,
+        'cookiefile': 'youtube_cookies.txt' if os.path.exists('youtube_cookies.txt') else None
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
