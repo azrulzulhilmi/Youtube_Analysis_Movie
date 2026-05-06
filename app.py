@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
-from youtube_transcript_api import YouTubeTranscriptApi
+import yt_dlp
+import requests
 from urllib.parse import urlparse, parse_qs
 import re
 import os
@@ -42,18 +43,48 @@ def extract_video_id(url):
     return url
 
 def get_youtube_transcript(video_url):
-    video_id = extract_video_id(video_url)
+    ydl_opts = {
+        'skip_download': True,
+        'quiet': True,
+    }
     try:
-        api = YouTubeTranscriptApi()
-        transcript_list = api.list(video_id)
-        try:
-            transcript = transcript_list.find_manually_created_transcript(['en'])
-        except:
-            transcript = transcript_list.find_generated_transcript(['en'])
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(video_url, download=False)
             
-        fetched = transcript.fetch()
-        text = "\n".join(snippet.text for snippet in fetched)
-        return text
+            subs = info.get('subtitles', {})
+            auto_subs = info.get('automatic_captions', {})
+            
+            sub_url = None
+            if 'en' in subs:
+                for s in subs['en']:
+                    if s.get('ext') == 'json3':
+                        sub_url = s.get('url')
+                        break
+            
+            if not sub_url and 'en' in auto_subs:
+                for s in auto_subs['en']:
+                    if s.get('ext') == 'json3':
+                        sub_url = s.get('url')
+                        break
+                        
+            if not sub_url:
+                return "Error fetching transcript: No English subtitles found."
+                
+            res = requests.get(sub_url)
+            if res.status_code == 200:
+                data = res.json()
+                text_parts = []
+                for event in data.get('events', []):
+                    if 'segs' in event:
+                        for seg in event['segs']:
+                            text_parts.append(seg.get('utf8', ''))
+                # Clean up newlines and extra spaces
+                full_text = "".join(text_parts)
+                full_text = re.sub(r'\s+', ' ', full_text).strip()
+                return full_text
+            else:
+                return f"Error fetching transcript: Could not download subtitles (Status {res.status_code})"
+                
     except Exception as e:
         return f"Error fetching transcript: {str(e)}"
 

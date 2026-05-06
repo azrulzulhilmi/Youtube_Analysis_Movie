@@ -1,4 +1,5 @@
 flask
-youtube-transcript-api
+yt-dlp
+requests
 textblob
 nrclex
